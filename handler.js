@@ -104,7 +104,7 @@ export async function handler(chatUpdate) {
                 if (!('role' in user))
                     user.role = 'Tadpole'
                 if (!('autolevelup' in user))
-                    user.autolevelup = false
+                    user.autolevelup = true
             } else {
                 global.db.data.users[m.sender] = {
                     exp: 0,
@@ -121,8 +121,8 @@ export async function handler(chatUpdate) {
                     banned: false,
                     warn: 0,
                     level: 0,
-                    role: 'Tadpole',
-                    autolevelup: false,
+                    role: 'غـيـر مـعـرف',
+                    autolevelup: true,
                     
                 }
                 }
@@ -130,7 +130,7 @@ export async function handler(chatUpdate) {
             if (typeof chat !== "object")
                 global.db.data.chats[m.chat] = {}
             if (chat) {
-                if (!("antiDelete" in chat)) chat.antiDelete = true
+                if (!("antiDelete" in chat)) chat.antiDelete = false
                 if (!("antiLink" in chat)) chat.antiLink = false
                 if (!("antiSticker" in chat)) chat.antiSticker = false
                 if (!("antiToxic" in chat)) chat.antiToxic = false
@@ -146,12 +146,12 @@ export async function handler(chatUpdate) {
                 if (!("useDocument" in chat)) chat.useDocument = false
                 if (!("viewOnce" in chat)) chat.viewOnce = false
                 if (!("viewStory" in chat)) chat.viewStory = false
-                if (!("welcome" in chat)) chat.welcome = false
+                if (!("welcome" in chat)) chat.welcome = true
                 if (!("chatbot" in chat)) chat.chatbot = false
                 if (!isNumber(chat.expired)) chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
-                    antiDelete: true,
+                    antiDelete: false,
                     antiLink: false,
                     antiSticker: false,
                     antiToxic: false,
@@ -169,7 +169,7 @@ export async function handler(chatUpdate) {
                     useDocument: false,
                     viewOnce: false,
                     viewStory: false,
-                    welcome: false,
+                    welcome: true,
                     chatbot: false
                 }
           
@@ -195,6 +195,8 @@ export async function handler(chatUpdate) {
         }
         if (opts["nyimak"])
             return
+        if (!m.fromMe && opts["self"])
+            return
         if (opts["pconly"] && m.chat.endsWith("g.us"))
             return
         if (opts["gconly"] && !m.chat.endsWith("g.us"))
@@ -219,10 +221,9 @@ export async function handler(chatUpdate) {
                 await delay(time)
             }, time)
         }
-         if (process.env.MODE && process.env.MODE.toLowerCase() === 'private' && !(isROwner || isOwner))
+        if (process.env.MODE && process.env.MODE.toLowerCase() === 'private' && !(isROwner || isOwner))
           return;
 
-        
         if (m.isBaileys)
             return
         m.exp += Math.ceil(Math.random() * 10)
@@ -387,11 +388,11 @@ export async function handler(chatUpdate) {
                 else
                     m.exp += xp
                     if (!isPrems && plugin.credit && global.db.data.users[m.sender].credit < plugin.credit * 1) {
-                        this.reply(m.chat, `🟥 You don't have enough gold`, m)
+                        this.reply(m.chat, `*⌫┇لـيـس لـديـك ذهـب كـافـي┇〄*`, m)
                         continue // Gold finished
                     }
                     if (plugin.level > _user.level) {
-                        this.reply(m.chat, `🟥 Level required ${plugin.level} to use this command. \nYour level ${_user.level}`, m)
+                        this.reply(m.chat, `*⌫┇تـحـتـاج الـي لـفـل ${plugin.level} لـتـسـتـعـمـل الامـر. لـفـلـك ${_user.level}┇〄*`, m)
                         continue // If the level has not been reached
                     }
                 let extra = {
@@ -546,16 +547,16 @@ export async function participantsUpdate({
                   ppgp = await this.profilePictureUrl(id, 'image');
                 } catch (error) {
                   console.error(`Error retrieving profile picture: ${error}`);
-                  pp = 'https://i.imgur.com/8B4jwGq.jpeg'; // Assign default image URL
-                  ppgp = 'https://i.imgur.com/8B4jwGq.jpeg'; // Assign default image URL
+                  pp = 'https://telegra.ph/file/138663c5da789e3add706.jpg'; // Assign default image URL
+                  ppgp = 'https://telegra.ph/file/138663c5da789e3add706.jpg'; // Assign default image URL
                 } finally {
-                  let text = (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user')
+                  let text = (chat.sWelcome || this.welcome || conn.welcome || 'اهـلا, @user')
                     .replace('@group', await this.getName(id))
                     .replace('@desc', groupMetadata.desc?.toString() || 'error')
                     .replace('@user', '@' + user.split('@')[0]);
           
                   let nthMember = groupMetadata.participants.length;
-                  let secondText = `Welcome, ${await this.getName(user)}, our ${nthMember}th member`;
+                  let secondText = `مـنـور, ${await this.getName(user)}, our ${nthMember}th member`;
           
                   let welcomeApiUrl = `https://welcome.guruapi.tech/welcome-image?username=${encodeURIComponent(
                     await this.getName(user)
@@ -564,7 +565,7 @@ export async function participantsUpdate({
                   )}&memberCount=${encodeURIComponent(
                     nthMember.toString()
                   )}&avatar=${encodeURIComponent(pp)}&background=${encodeURIComponent(
-                    'https://cdn.wallpapersafari.com/71/19/7ZfcpT.png'
+                    'https://telegra.ph/file/138663c5da789e3add706.jpg'
                   )}`;
           
                   try {
@@ -576,10 +577,10 @@ export async function participantsUpdate({
                         contextInfo: {
                         mentionedJid: [user],
                         externalAdReply: {
-                        title: "ᴛʜᴇ ɢᴜʀᴜ-ʙᴏᴛ",
-                        body: "welcome to Group",
+                        title: "𝚃𝙷𝙴 𝙼𝙴𝙳𝙾 - 𝙱𝙾𝚃",
+                        body: "اهـلا بـك",
                         thumbnailUrl: welcomeApiUrl,
-                        sourceUrl: 'https://chat.whatsapp.com/BFfD1C0mTDDDfVdKPkxRAA',
+                        sourceUrl: 'https://chat.whatsapp.com/F3sB3pR3tClBvVmlIkqDJp',
                         mediaType: 1,
                         renderLargerThumbnail: true
                         }}})
@@ -601,14 +602,14 @@ export async function participantsUpdate({
                   ppgp = await this.profilePictureUrl(id, 'image');
                 } catch (error) {
                   console.error(`Error retrieving profile picture: ${error}`);
-                  pp = 'https://i.imgur.com/8B4jwGq.jpeg'; // Assign default image URL
-                  ppgp = 'https://i.imgur.com/8B4jwGq.jpeg'; // Assign default image URL
+                  pp = 'https://telegra.ph/file/138663c5da789e3add706.jpg'; // Assign default image URL
+                  ppgp = 'https://telegra.ph/file/138663c5da789e3add706.jpg'; // Assign default image URL
                 } finally {
-                  let text = (chat.sBye || this.bye || conn.bye || 'HELLO, @user')
+                  let text = (chat.sBye || this.bye || conn.bye || 'اهـلا, @user')
                     .replace('@user', '@' + user.split('@')[0]);
           
                   let nthMember = groupMetadata.participants.length;
-                  let secondText = `Goodbye, our ${nthMember}th group member`;
+                  let secondText = `goodbye, our ${nthMember}th group member`;
           
                   let leaveApiUrl = `https://welcome.guruapi.tech/leave-image?username=${encodeURIComponent(
                     await this.getName(user)
@@ -617,7 +618,7 @@ export async function participantsUpdate({
                   )}&memberCount=${encodeURIComponent(
                     nthMember.toString()
                   )}&avatar=${encodeURIComponent(pp)}&background=${encodeURIComponent(
-                    'https://cdn.wallpapersafari.com/71/19/7ZfcpT.png'
+                    'https://telegra.ph/file/138663c5da789e3add706.jpg'
                   )}`;
           
                   try {
@@ -629,10 +630,10 @@ export async function participantsUpdate({
                         contextInfo: {
                         mentionedJid: [user],
                         externalAdReply: {
-                        title: "ᴛʜᴇ ɢᴜʀᴜ-ʙᴏᴛ",
-                        body: "Goodbye from  Group",
+                        title: "𝚃𝙷𝙴 𝙼𝙴𝙳𝙾 - 𝙱𝙾𝚃",
+                        body: "مـع الـسـلامـة مـن",
                         thumbnailUrl: leaveApiUrl,
-                        sourceUrl: 'https://chat.whatsapp.com/BFfD1C0mTDDDfVdKPkxRAA',
+                        sourceUrl: 'https://chat.whatsapp.com/F3sB3pR3tClBvVmlIkqDJp',
                         mediaType: 1,
                         renderLargerThumbnail: true
                         }}})
@@ -644,7 +645,7 @@ export async function participantsUpdate({
             }
             break;
             case "promote":
-                const promoteText = (chat.sPromote || this.spromote || conn.spromote || `${emoji.promote} @user *is now admin*`).replace("@user", "@" + participants[0].split("@")[0]);
+                const promoteText = (chat.sPromote || this.spromote || conn.spromote || ` *⌫┇${emoji.promote} @user اصـبـح مـشـرف┇〄*`).replace("@user", "@" + participants[0].split("@")[0]);
                 if (chat.detect) {
                     this.sendMessage(id, {
                         text: promoteText.trim(),
@@ -653,7 +654,7 @@ export async function participantsUpdate({
                 }
                 break;
             case "demote":
-                const demoteText = (chat.sDemote || this.sdemote || conn.sdemote || `${emoji.demote} @user *demoted from admin*`).replace("@user", "@" + participants[0].split("@")[0]);
+                const demoteText = (chat.sDemote || this.sdemote || conn.sdemote || ` *⌫┇${emoji.demote} @user تـم تـنـزيـلـه مـن الاشـراف┇〄*`).replace("@user", "@" + participants[0].split("@")[0]);
                 if (chat.detect) {
                     this.sendMessage(id, {
                         text: demoteText.trim(),
@@ -690,25 +691,25 @@ export async function groupsUpdate(groupsUpdate) {
         if (!chats.detect) continue
 
         if (groupUpdate.desc) {
-            text = (chats.sDesc || this.sDesc || conn.sDesc || `*${emoji.desc} Description has been changed to*\n@desc`)
+            text = (chats.sDesc || this.sDesc || conn.sDesc || `*⌫┇${emoji.desc} تـم تـغـيـر الـوصـف الـي┇〄*\n\n@desc`)
                 .replace("@desc", groupUpdate.desc)
         } else if (groupUpdate.subject) {
-            text = (chats.sSubject || this.sSubject || conn.sSubject || `*${emoji.subject} Subject has been changed to*\n@subject`)
+            text = (chats.sSubject || this.sSubject || conn.sSubject || `*⌫┇${emoji.subject} الـمـوضـوع تـم تـغـيـره الـي*\n\n@subject`)
                 .replace("@subject", groupUpdate.subject)
         } else if (groupUpdate.icon) {
-            text = (chats.sIcon || this.sIcon || conn.sIcon || `*${emoji.icon} Icon has been changed*`)
+            text = (chats.sIcon || this.sIcon || conn.sIcon || `*⌫┇${emoji.icon} تـم تـغـيـر صـوره الـجـروب ┇〄*`)
                 .replace("@icon", groupUpdate.icon)
         } else if (groupUpdate.revoke) {
-            text = (chats.sRevoke || this.sRevoke || conn.sRevoke || `*${emoji.revoke} Group link has been changed to*\n@revoke`)
+            text = (chats.sRevoke || this.sRevoke || conn.sRevoke || `*⌫┇${emoji.revoke} تـم اعـادة تـعـيـن رابـط الـجـروب┇〄*`)
                 .replace("@revoke", groupUpdate.revoke)
         } else if (groupUpdate.announce === true) {
-            text = (chats.sAnnounceOn || this.sAnnounceOn || conn.sAnnounceOn || `*${emoji.announceOn} Group is now closed!*`)
+            text = (chats.sAnnounceOn || this.sAnnounceOn || conn.sAnnounceOn || `*⌫┇${emoji.announceOn} الـمـجـوعـة الان مـغـلـقـة┇〄*`)
         } else if (groupUpdate.announce === false) {
-            text = (chats.sAnnounceOff || this.sAnnounceOff || conn.sAnnounceOff || `*${emoji.announceOff} Group is now open!*`)
+            text = (chats.sAnnounceOff || this.sAnnounceOff || conn.sAnnounceOff || `*⌫┇${emoji.announceOff} الـمـجـوعـة الان مـفـتـوحـة┇〄*`)
         } else if (groupUpdate.restrict === true) {
-            text = (chats.sRestrictOn || this.sRestrictOn || conn.sRestrictOn || `*${emoji.restrictOn} Group is now restricted to participants only!*`)
+            text = (chats.sRestrictOn || this.sRestrictOn || conn.sRestrictOn || `*⌫┇${emoji.restrictOn} الان فـقـط الاعـضـاء يـسـتـطـعـون اسـتـعـمـال الـبـوت┇〄*`)
         } else if (groupUpdate.restrict === false) {
-            text = (chats.sRestrictOff || this.sRestrictOff || conn.sRestrictOff || `*${emoji.restrictOff} Group is now restricted to admins only!*`)
+            text = (chats.sRestrictOff || this.sRestrictOff || conn.sRestrictOff || `*⌫┇${emoji.restrictOff} الادمـن فـقـط يـسـتـطـعـون اسـتـعـمـال الـبـوت┇〄*`)
         }
         
 
@@ -722,11 +723,15 @@ Delete Chat
  */
 export async function deleteUpdate(message) {
     try {
-        
+
+
+ if (typeof process.env.antidelete === 'undefined' || process.env.antidelete.toLowerCase() === 'false') return;
+
        
-      if (typeof process.env.antidelete === 'undefined' || process.env.antidelete.toLowerCase() === 'false') return;
+ if (typeof process.env.antidelete === 'undefined' ||
+process.env.antidelete.toLowerCase() === 'false') return;
 
-
+        
         const {
             fromMe,
             id,
@@ -738,15 +743,14 @@ export async function deleteUpdate(message) {
         if (!msg)
             return
         let chat = global.db.data.chats[msg.chat] || {}
-       
+        
             await this.reply(msg.chat, `
-            ≡ deleted a message 
+            ≡ رساله حذف تلقائي طنشها
             ┌─⊷  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀 
-            ▢ *Number :* @${participant.split`@`[0]} 
+            ▢ *المنشن :* @${participant.split`@`[0]} 
             └─────────────
-            TO DEACTIVE , PRESS 
-            */off antidelete*
-            *.enable delete*
+            الإلغاء 
+            */off antidelet
             `.trim(), msg, {
                         mentions: [participant]
                     })
@@ -796,9 +800,9 @@ export async function presenceUpdate(presenceUpdate) {
         await console.log("AFK");
         const username = nouser[0].split("@")[0];
         const timeAfk = new Date() - user.afk;
-        const caption = `\n@${username} has stopped being AFK and is currently typing.\n\nReason: ${
-            user.afkReason ? user.afkReason : "No Reason"
-          }\nFor the past ${timeAfk.toTimeString()}.\n`;
+        const caption = `\n@${username} لـقـد عـاد بـعـد الاخـتـفـاء.\n\nالـسـبـب: ${
+            user.afkReason ? user.afkReason : "لا سـبـب"
+          }\nوقـت الاخـتـفـاء ${timeAfk.toTimeString()}.\n`;
           
 
         this.reply(id, caption, null, {
@@ -814,7 +818,7 @@ export async function presenceUpdate(presenceUpdate) {
 dfail
  */
 global.dfail = (type, m, conn) => {
-    const userTag = `👋 Hai *@${m.sender.split("@")[0]}*, `
+    const userTag = `@${m.sender.split("@")[0]}`
     const emoji = {
         general: '⚙️',
         owner: '👑',
@@ -831,26 +835,16 @@ global.dfail = (type, m, conn) => {
     }
 
     const msg = {
-        owner: `*${emoji.owner} Owner's Query*\n
-    ${userTag} This command can only be used by the *Bot Owner*!`,
-        moderator: `*${emoji.moderator} Moderator's Query*\n
-    ${userTag} This command can only be used by *Moderators*!`,
-        premium: `*${emoji.premium} Premium Query*\n
-    ${userTag} This command is only for *Premium Members*!`,
-        group: `*${emoji.group} Group Query*\n
-    ${userTag} This command can only be used in *Group Chats*!`,
-        private: `*${emoji.private} Private Query*\n
-    ${userTag} This command can only be used in *Private Chats*!`,
-        admin: `*${emoji.admin} Admin's Query*\n
-    ${userTag} This command is only for *Group Admins*!`,
-        botAdmin: `*${emoji.botAdmin} Bot Admin's Query*\n
-    ${userTag} Make the bot an *Admin* to use this command!`,
-        unreg: `*${emoji.unreg} Registration Query*\n
-    ${userTag} Please register to use this feature by typing:\n\n*#register name.age*\n\nExample: *#register ${m.name}.18*!`,
-        nsfw: `*${emoji.nsfw} NSFW Query*\n
-    ${userTag} NSFW is not active. Please contact the Group admin to enable this feature!`,
-        restrict: `*${emoji.restrict} Inactive Feature Query*\n
-    ${userTag} This feature is *disabled*!`,
+        owner: `*⌫┇${emoji.owner} امـر لـي مـالـك الـبـوت فـقـط يـا ${userTag}┇〄*`,
+        moderator: `*⌫┇${emoji.moderator} هـذا الامـر لـي الـمـوديـتـر فـقـط يا ${userTag}┇〄*`,
+        premium: `*⌫┇${emoji.premium} هـذا الامـر لـي الـبـريـمـيـام فـقـط يـا ${userTag}┇〄*`,
+        group: `*⌫┇${emoji.group} هـذا الامـر لـي الـمـجـمـوعـات فـقـط يـا ${userTag}┇〄*`,
+        private: `*⌫┇${emoji.private} هـذا الامـر فـي خـاص الـبـوت فـقـط يـا ${userTag}┇〄*`,
+        admin: `*⌫┇${emoji.admin} هـذا الامـر لـي ادمـن الـمـجـمـوعـة فـقـط يـا ${userTag}┇〄*`,
+        botAdmin: `*⌫┇${emoji.botAdmin} هـذا الامـر يـتـطـلـب ان يـكـون الـبـوت مـشـرف يـا ${userTag}┇〄*`,
+        unreg: `*⌫┇${emoji.unreg} يـجـب ان تـكـون مـسـجـل لـي اسـتـعـمـال الامـر لـلـتـسـجـيـل اكـتـب .تسجيل ${userTag}┇〄*`,
+        nsfw: `*⌫┇${emoji.nsfw} مـمـنـوع اسـتـعـمـال الامـر┇〄*`,
+        restrict: `*⌫┇${emoji.restrict} تـم تـعـطـيـل الامـر مـن الـمـالـك يـا ${userTag}┇〄*`,
     }
      [type]
     if (msg) return  m.reply(msg)
